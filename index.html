@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Practice Simulator</title>
+    <link rel="icon" href="https://images.emojiterra.com/microsoft/fluent-emoji/15.1/256px/1f3eb_color.png">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <!-- <script type="importmap">
+      {
+        "imports": {
+          "@google/genai": "https://esm.sh/@google/genai@^0.14.0"
+        }
+      }
+    </script> -->
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="app-title">🏫English Practice Simulator🏫</div>
+        </header>
+        <main class="app-main">
+            <div id="drill-content-area" class="drill-content-area" aria-live="polite" aria-atomic="true">
+                <!-- Hint and Sentence pairs will be dynamically inserted here -->
+            </div>
+        </main>
+        <footer class="app-footer">
+            <button id="settings-button" class="icon-button" aria-label="Settings">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                    <path
+                        d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61.22l2-3.46c.12-.22.07.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z" />
+                </svg>
+            </button>
+            <button id="help-button" class="icon-button" aria-label="Help and Information">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v2h-2V7zm0 4h2v6h-2v-6z" />
+                </svg>
+            </button>
+            <button id="new-game-button" class="text-button">New game</button>
+            <button id="mic-button" class="icon-button" aria-label="Start voice input">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                    <path
+                        d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z" />
+                </svg>
+                <div class="mic-animation-indicator"></div>
+            </button>
+        </footer>
+    </div>
+
+    <div id="welcome-modal" class="modal" aria-modal="true" role="dialog" aria-labelledby="welcome-title"
+        style="display: none;">
+        <div class="modal-content welcome-modal-content">
+            <h2 id="welcome-title" class="modal-header">Welcome to English practice simulator!</h2>
+
+            <div class="welcome-section">
+                <p>Hi there! 👋 Thank you for choosing our English practice simulator app to practice and improve your
+                    English with Substitution Drills!</p>
+            </div>
+
+            <div class="welcome-section">
+                <h3 class="welcome-subheader">How to Play</h3>
+                <p>The game is simple and effective for learning sentence structures:</p>
+                <ul class="welcome-list">
+                    <li>Press <strong>'New Game'</strong> to start. The AI will generate a set of sentences.</li>
+                    <li>The first sentence is your base. You don't need to type it.</li>
+                    <li>For each subsequent row, look at the <strong>Hint</strong> on the left.</li>
+                    <li>Modify the <em>previous correct sentence</em> using this hint to form the new sentence in the
+                        input field on the right.</li>
+                    <li>Type your answer and press Enter, or use the <strong>microphone button</strong> (🎙️) for voice
+                        input.</li>
+                    <li>If correct, the field will turn green, and you'll hear the sentence (if audio is on). If
+                        incorrect, it will turn red – try again!</li>
+                    <li>Continue until all sentences are complete. You'll get a little celebration! 🎉</li>
+                    <li>Explore <strong>Settings (⚙️)</strong> to customize difficulty, sentence count, topics, and
+                        more.</li>
+                </ul>
+            </div>
+
+            <div class="welcome-section">
+                <h3 class="welcome-subheader">Why It's Helpful</h3>
+                <p>Substitution drills are a powerful way to:</p>
+                <ul class="welcome-list">
+                    <li>Master common sentence patterns.</li>
+                    <li>Expand your vocabulary in context.</li>
+                    <li>Improve your grammatical accuracy.</li>
+                    <li>Build fluency by thinking and responding in English.</li>
+                    <li>Practice pronunciation with text-to-speech and voice input.</li>
+                </ul>
+            </div>
+
+            <!-- New section for API Key input on welcome modal -->
+            <div class="welcome-section">
+                <h3 class="welcome-subheader">Google AI API Key</h3>
+                <p>To use the AI features for sentence generation, you need a Google AI API Key.</p>
+                <p>
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Get your free API Key from Google AI Studio</a>.
+                    <p>Click on blue button "+ Create API Key" -> in input "Search Google Cloud projects" -> create&choose MyFirstProject -> and click "Create API key in existing project"</p>
+                </p>
+                <div class="setting-item custom-topic-input-container">
+                    <input type="text" id="api-key-input-welcome" placeholder="Enter your Google AI API Key" class="custom-topic-input">
+                    <button id="save-api-key-welcome-button" class="custom-topic-add-button">Save API Key</button>
+                </div>
+            </div>
+
+            <div class="welcome-section">
+                <h3 class="welcome-subheader">Our Awesome Sponsors</h3>
+                <p>This app is proudly supported by:</p>
+                <ul class="welcome-list sponsors-list">
+                    <li><strong>FAMENG ENGLISH SCHOOL</strong></li>
+                    <li>
+                        <strong>Olga Bond</strong>
+                        <ul class="sub-list">
+                            <li>Check out her YouTube channel: <a href="https://www.youtube.com/@EnglishOlgaBond"
+                                    target="_blank" rel="noopener noreferrer">English with YouTube Olga Bond</a></li>
+                            <li>Watch this helpful video: <a href="https://www.youtube.com/watch?v=sIwaaTUPECE"
+                                    target="_blank" rel="noopener noreferrer">Tutorial how to practice Substitution
+                                    Drills</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="modal-footer">
+                <button id="open-feedback-button" class="text-button primary"><u>Provide Feedback</u></button>
+                <button id="close-welcome-modal-button" class="text-button primary">Got it! Let's Practice</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="settings-modal" class="modal" aria-modal="true" role="dialog" aria-labelledby="settings-title"
+        style="display: none;">
+        <div class="modal-content">
+            <h2 id="settings-title" class="modal-header">SETTINGS</h2>
+
+            <div class="settings-section">
+                <button class="settings-section-toggle" aria-expanded="true" aria-controls="visuals-content">
+                    <h3 class="settings-subheader">Visuals</h3>
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+                    </svg>
+                </button>
+                <div id="visuals-content" class="settings-section-content">
+                    <div class="setting-item">
+                        <label for="appearance-mode">Appearance mode</label>
+                        <select id="appearance-mode">
+                            <option value="system">System</option>
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="scaling-range">Scaling</label>
+                        <input type="range" id="scaling-range" min="50" max="150" value="100">
+                        <span id="scaling-value">100%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <button class="settings-section-toggle" aria-expanded="true" aria-controls="audio-content">
+                    <h3 class="settings-subheader">Audio</h3>
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+                    </svg>
+                </button>
+                <div id="audio-content" class="settings-section-content">
+                    <div class="setting-item">
+                        <label for="tts-voice">Change voice TTS</label>
+                        <select id="tts-voice">
+                            <option value="">Default</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="voice-volume">Voice</label>
+                        <input type="range" id="voice-volume" min="0" max="100" value="80">
+                        <span id="voice-volume-value">80%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <button class="settings-section-toggle" aria-expanded="true" aria-controls="generation-content">
+                    <h3 class="settings-subheader">Generation</h3>
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+                    </svg>
+                </button>
+                <div id="generation-content" class="settings-section-content">
+                    <!-- New section for API Key input on settings modal -->
+                    <div class="setting-item custom-topic-input-container">
+                        <input type="text" id="api-key-input-settings" placeholder="Enter your Google AI API Key" class="custom-topic-input">
+                        <button id="save-api-key-settings-button" class="custom-topic-add-button">Save API Key</button>
+                    </div>
+                    <div class="setting-item">
+                        <label for="sentence-count">Count of sentences</label>
+                        <input type="range" id="sentence-count" min="5" max="25" value="15">
+                        <span id="sentence-count-value">15</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="difficulty-level">Difficulty</label>
+                        <input type="range" id="difficulty-level" min="0" max="3" value="1"> <!-- Max 3 for 4 levels -->
+                        <span id="difficulty-value">⚡</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section" id="situations-settings-outer-section"> <!-- Renamed for clarity -->
+                <button class="settings-section-toggle" aria-expanded="true" aria-controls="situations-content">
+                    <h3 class="settings-subheader">Situations & Locations</h3>
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+                    </svg>
+                </button>
+                <div id="situations-content" class="settings-section-content">
+                    <div class="setting-item custom-topic-input-container">
+                        <input type="text" id="custom-situation-input"
+                            placeholder="Search or add custom location/situation..." class="custom-topic-input">
+                        <button id="add-custom-situation-button" class="custom-topic-add-button">Add</button>
+                    </div>
+                    <div class="setting-item checkbox-item">
+                        <input type="checkbox" id="situation-all" name="situation-all" value="all">
+                        <label for="situation-all" class="choose-all-label">Choose everything</label>
+                    </div>
+                    <div id="predefined-situations-list">
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="situation-general" name="situation-general"
+                                value="General Conversation" checked>
+                            <label for="situation-general">General Conversation</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="situation-travel" name="situation-travel" value="Travel">
+                            <label for="situation-travel">Travel</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="situation-work" name="situation-work" value="Work/Office">
+                            <label for="situation-work">Work/Office</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="situation-hobbies" name="situation-hobbies"
+                                value="Hobbies/Interests">
+                            <label for="situation-hobbies">Hobbies/Interests</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="situation-food" name="situation-food" value="Food/Restaurant">
+                            <label for="situation-food">Food/Restaurant</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="situation-shopping" name="situation-shopping" value="Shopping">
+                            <label for="situation-shopping">Shopping</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="situation-doctor" name="situation-doctor" value="At the Doctor">
+                            <label for="situation-doctor">At the Doctor</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="situation-routines" name="situation-routines"
+                                value="Daily Routines">
+                            <label for="situation-routines">Daily Routines</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="situation-social" name="situation-social" value="Social Events">
+                            <label for="situation-social">Social Events</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="situation-technology" name="situation-technology"
+                                value="Technology">
+                            <label for="situation-technology">Technology</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="situation-news" name="situation-news"
+                                value="News & Current Events">
+                            <label for="situation-news">News & Current Events</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="situation-nature" name="situation-nature"
+                                value="Nature & Environment">
+                            <label for="situation-nature">Nature & Environment</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="situation-school" name="situation-school"
+                                value="School/University">
+                            <label for="situation-school">School/University</label>
+                        </div>
+                    </div>
+                    <h4 class="custom-topics-subheader" id="custom-situations-header" style="display:none;">Custom
+                        Added:</h4>
+                    <div id="custom-situations-list" class="custom-topics-list">
+                        <!-- Dynamically added custom situation checkboxes will go here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section" id="focuses-settings-outer-section"> <!-- Renamed for clarity -->
+                <button class="settings-section-toggle" aria-expanded="true" aria-controls="focuses-content">
+                    <h3 class="settings-subheader">Learning Focus</h3>
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+                    </svg>
+                </button>
+                <div id="focuses-content" class="settings-section-content">
+                    <div class="setting-item custom-topic-input-container">
+                        <input type="text" id="custom-focus-input" placeholder="Search or add custom learning focus..."
+                            class="custom-topic-input">
+                        <button id="add-custom-focus-button" class="custom-topic-add-button">Add</button>
+                    </div>
+                    <div class="setting-item checkbox-item">
+                        <input type="checkbox" id="focus-all" name="focus-all" value="all">
+                        <label for="focus-all" class="choose-all-label">Choose everything</label>
+                    </div>
+                    <div id="predefined-focuses-list">
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="focus-vocab" name="focus-vocab" value="Common Vocabulary"
+                                checked>
+                            <label for="focus-vocab">Common Vocabulary</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="focus-phrasal" name="focus-phrasal" value="Phrasal Verbs">
+                            <label for="focus-phrasal">Phrasal Verbs</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="focus-idioms" name="focus-idioms" value="Idioms">
+                            <label for="focus-idioms">Idioms</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="focus-tenses" name="focus-tenses"
+                                value="Verb Tenses (e.g., past, present, future)">
+                            <label for="focus-tenses">Verb Tenses</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="focus-questions" name="focus-questions"
+                                value="Forming Questions">
+                            <label for="focus-questions">Forming Questions</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="focus-prepositions" name="focus-prepositions"
+                                value="Prepositions">
+                            <label for="focus-prepositions">Prepositions</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="focus-conditionals" name="focus-conditionals"
+                                value="Conditionals">
+                            <label for="focus-conditionals">Conditionals</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="focus-modals" name="focus-modals" value="Modal Verbs">
+                            <label for="focus-modals">Modal Verbs</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="focus-reported" name="focus-reported" value="Reported Speech">
+                            <label for="focus-reported">Reported Speech</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="focus-passive" name="focus-passive" value="Passive Voice">
+                            <label for="focus-passive">Passive Voice</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="focus-articles" name="focus-articles"
+                                value="Articles (a, an, the)">
+                            <label for="focus-articles">Articles (a, an, the)</label>
+                        </div>
+                        <div class="setting-item checkbox-item">
+                            <input type="checkbox" id="focus-pronouns" name="focus-pronouns" value="Pronouns">
+                            <label for="focus-pronouns">Pronouns</label>
+                        </div>
+                    </div>
+                    <h4 class="custom-topics-subheader" id="custom-focuses-header" style="display:none;">Custom Added:
+                    </h4>
+                    <div id="custom-focuses-list" class="custom-topics-list">
+                        <!-- Dynamically added custom focus checkboxes will go here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="back-button-settings" class="text-button">Back</button>
+                <button id="save-button-settings" class="text-button primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Loading sentences...</p>
+    </div>
+    <div id="toast-message" class="toast-base-style" style="display: none;"></div>
+    <div id="confetti-container"></div>
+
+    <script type="module" src="index.tsx"></script>
+</body>
+
+</html>
