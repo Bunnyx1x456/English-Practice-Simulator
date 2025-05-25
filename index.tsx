@@ -12,12 +12,11 @@ const APP_SETTINGS_KEY = 'englishLearnerSettings_v3';
 const APP_WELCOME_SHOWN_KEY = 'englishLearnerWelcomeShown_v1';
 const API_KEY_COOKIE_NAME = 'googleAiApiKey'; // New constant for cookie name
 const DEBOUNCE_DELAY = 300; // ms for search input debounce
-const VICTORY_SOUND_PATHS = ["/assets/victory1.mp3", "/assets/victory2.mp3", "/assets/victory3.mp3"];
 
 // --- DOM Elements ---
 let drillContentAreaElement: HTMLElement;
 let newGameButton: HTMLButtonElement;
-let settingsButton: HTMLButtonButtonElement;
+let settingsButton: HTMLButtonElement; // Corrected type
 let helpButton: HTMLButtonElement;
 let micButton: HTMLButtonElement;
 
@@ -490,7 +489,7 @@ function renderLists() {
     if (!sentences || sentences.length === 0) {
         const placeholder = document.createElement('p');
         placeholder.classList.add('placeholder-text');
-        placeholder.textContent = 'Press "New Game" to start.';
+        placeholder.textContent = 'Adjust the settings or start a New game now.';
         drillContentAreaElement.appendChild(placeholder);
         return;
     }
@@ -517,37 +516,51 @@ function renderLists() {
         const sentenceContainer = document.createElement('div');
         sentenceContainer.classList.add('sentence-item-container');
 
-        const inputElement = document.createElement('textarea'); // Changed to textarea
+        const inputElement = document.createElement('textarea');
         inputElement.classList.add('sentence-input');
         inputElement.id = `sentence-input-${index}`;
         inputElement.setAttribute('data-index', index.toString());
-        inputElement.setAttribute('data-hint-id', hintItemId); // Link to hint for ResizeObserver
-        inputElement.rows = 1; // Start with one row
+        inputElement.setAttribute('data-hint-id', hintItemId);
+        inputElement.rows = 1;
 
-        if (index === 0) {
+        if (index === 0) { // Base sentence
             inputElement.classList.add('correct');
             inputElement.value = pair.sentence;
             inputElement.readOnly = true;
-            sentenceContainer.appendChild(inputElement);
-            if (ttsEnabled) {
-                sentenceContainer.appendChild(createSpeakerButton(pair.sentence, index));
-            }
-        } else {
+        } else { // Subsequent sentences
             inputElement.value = userInputs[index] || '';
-            inputElement.placeholder = index === activeDrillIndex ? `Use hint: "${pair.hint}"` : "Locked";
             inputElement.setAttribute('aria-label', `Sentence input ${index + 1}, hint: ${pair.hint}`);
 
             if (validationStates[index] === 'correct') {
                 inputElement.classList.add('correct');
                 inputElement.readOnly = true;
+                // No explicit placeholder, value is shown.
             } else if (validationStates[index] === 'incorrect') {
+                // This implies index === activeDrillIndex, as an incorrect one would be the active one
                 inputElement.classList.add('incorrect');
-            }
-            sentenceContainer.appendChild(inputElement);
-            if (ttsEnabled && validationStates[index] === 'correct') {
-                 sentenceContainer.appendChild(createSpeakerButton(pair.sentence, index));
+                inputElement.placeholder = `Use hint: "${pair.hint}"`;
+                inputElement.disabled = false; // Ensure editable
+            } else { // validationStates[index] === 'pending'
+                if (index === activeDrillIndex) {
+                    inputElement.placeholder = `Use hint: "${pair.hint}"`;
+                    inputElement.disabled = false; // Current active input
+                    inputElement.classList.add('is-active-target');
+                } else {
+                    // This covers pending items that are NOT the activeDrillIndex
+                    // i.e., index > activeDrillIndex (future locked items)
+                    // or index < activeDrillIndex (past pending items, though less common)
+                    inputElement.placeholder = "Locked";
+                    inputElement.disabled = true;
+                }
             }
         }
+
+        sentenceContainer.appendChild(inputElement);
+        // Add speaker button only if TTS enabled AND (base sentence OR sentence is correct)
+        if (ttsEnabled && (index === 0 || validationStates[index] === 'correct')) {
+            sentenceContainer.appendChild(createSpeakerButton(pair.sentence, index));
+        }
+
         drillPairRow.appendChild(sentenceContainer);
         drillContentAreaElement.appendChild(drillPairRow);
 
@@ -561,9 +574,9 @@ function renderLists() {
     const activeRow = document.getElementById(`drill-row-${activeDrillIndex}`);
     if (activeRow) {
         activeRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        if (activeDrillIndex > 0) {
+        if (activeDrillIndex > 0 && activeDrillIndex < sentences.length) { // Check if activeDrillIndex is within valid input range
             const activeInput = activeRow.querySelector(`#sentence-input-${activeDrillIndex}`) as HTMLTextAreaElement;
-            if (activeInput && !isRecognizingSpeech && !isGenerating && document.activeElement !== activeInput) {
+            if (activeInput && !activeInput.disabled && !activeInput.readOnly && !isRecognizingSpeech && !isGenerating && document.activeElement !== activeInput) {
                 activeInput.focus({ preventScroll: true });
             }
         }
@@ -576,12 +589,12 @@ function renderLists() {
         if (gameJustCompleted) {
             showToast("Congratulations! All drills completed!", 3000, 'success');
             triggerConfettiEffect();
-            playRandomVictorySound();
             highlightNewGameButton();
             gameJustCompleted = false;
         }
     }
 }
+
 
 function createSpeakerButton(sentenceText: string, sentenceIndex: number): HTMLButtonElement {
     const speakerButton = document.createElement('button');
@@ -1402,15 +1415,4 @@ function highlightNewGameButton() {
     setTimeout(() => {
         button.classList.remove(pulseClassName);
     }, 350 * 2);
-}
-
-function playRandomVictorySound() {
-    const randomIndex = Math.floor(Math.random() * VICTORY_SOUND_PATHS.length);
-    const selectedSound = VICTORY_SOUND_PATHS[randomIndex];
-    const audio = new Audio(selectedSound);
-    audio.play().catch(error => {
-        console.warn("Error playing victory sound:", error);
-        // Optional: show a toast or provide feedback if sound fails
-        // showToast("Could not play victory sound.", 2000, 'error');
-    });
 }

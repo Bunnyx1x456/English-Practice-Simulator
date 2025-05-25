@@ -12,6 +12,7 @@
     --selected-border-color: var(--primary-color);
     --danger-color: #dc3545;
     --danger-bg-color: #f8d7da;
+    --hint-item-active-text-color: #000000;
     /* For input background on error */
     --danger-text-color-on-bg: #721c24;
     /* Text color for elements with danger-bg-color */
@@ -20,7 +21,6 @@
     /* For input background on success */
     --success-text-color-on-bg: #155724;
     /* Text color for elements with success-bg-color */
-
 
     --header-height: 50px;
     --footer-height: 60px;
@@ -122,6 +122,7 @@ body {
     height: 100%;
     overflow-y: auto;
     padding-right: 5px;
+    padding-left: 5px;
 }
 
 
@@ -152,11 +153,11 @@ body {
     background-color: var(--selected-bg-color);
     outline: 2px solid var(--selected-border-color);
     outline-offset: -1px;
-    font-weight: 500;
-    color: var(--dark-mode) ? var(--text-color): #002b5c;
+    color: var(--hint-item-active-text-color);
 }
 
 .dark-mode .hint-item.active {
+    --hint-item-active-color: var(--text-color);
     color: var(--text-color);
 }
 
@@ -182,7 +183,7 @@ body {
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     font-size: 1em;
-    font-family: default;
+    font-family: 'Roboto', sans-serif;
     /* Ensure font matches */
     line-height: 1.6;
     /* Match body or set explicitly for scrollHeight calc */
@@ -222,6 +223,18 @@ body {
 .dark-mode .sentence-input[readonly] {
     background-color: var(--surface-color);
     opacity: 0.7;
+}
+
+.sentence-input.is-active-target {
+    background-color: var(--selected-bg-color);
+    /* Apply an outline similar to .hint-item.active */
+    outline: 2px solid var(--selected-border-color);
+    outline-offset: -1px; /* This places the outline just outside the input's own border, matching .hint-item.active */
+    color: var(--hint-item-active-text-color);
+}
+
+.dark-mode .sentence-input.is-active-target {
+    color: var(--text-color); /* Match dark mode active hint text color */
 }
 
 .sentence-input.correct {
@@ -497,7 +510,7 @@ body {
 .welcome-list .sub-list {
     list-style-type: none;
     padding-left: 20px;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 .welcome-list .sub-list li::before {
@@ -574,7 +587,7 @@ body {
 .custom-topics-subheader {
     font-size: 0.95em;
     font-weight: 500;
-    margin-top: 15px;
+    margin-top: 10px;
     margin-bottom: 8px;
     color: var(--text-color);
     opacity: 0.8;
@@ -673,7 +686,7 @@ body {
 
 
 .custom-topics-list {
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 
@@ -681,7 +694,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: auto;
+    margin-top: 15px;
 }
 
 #welcome-modal .modal-footer {
