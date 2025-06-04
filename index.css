@@ -1,3 +1,4 @@
+
 :root {
     --font-family: 'Roboto', sans-serif;
     --primary-color: #007AFF;
@@ -229,12 +230,14 @@ body {
     background-color: var(--selected-bg-color);
     /* Apply an outline similar to .hint-item.active */
     outline: 2px solid var(--selected-border-color);
-    outline-offset: -1px; /* This places the outline just outside the input's own border, matching .hint-item.active */
+    outline-offset: -1px;
+    /* This places the outline just outside the input's own border, matching .hint-item.active */
     color: var(--hint-item-active-text-color);
 }
 
 .dark-mode .sentence-input.is-active-target {
-    color: var(--text-color); /* Match dark mode active hint text color */
+    color: var(--text-color);
+    /* Match dark mode active hint text color */
 }
 
 .sentence-input.correct {
@@ -250,6 +253,7 @@ body {
     /* Specific for base and completed correct answers */
     background-color: var(--bg-color);
     color: var(--text-color);
+    -webkit-user-select: text;
     user-select: text;
     /* Allow text selection */
     cursor: default;
@@ -396,12 +400,17 @@ body {
     transform: translate(-50%, -50%) scale(0.8);
     opacity: 0;
     pointer-events: none;
-    z-index: -1;
+    z-index: 0;
     display: block;
 }
 
 #mic-button.active-mic .mic-animation-indicator {
     animation: mic-pulse-glow 1.5s infinite ease-out;
+}
+
+#mic-button svg {
+    position: relative;
+    z-index: 1;
 }
 
 @keyframes mic-pulse-glow {
@@ -784,12 +793,6 @@ body {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
 }
-
-.toast-base-style.show-above-footer {
-    /* This class can be used for more specific adjustments if needed,
-      but the base 'bottom' value is now primary for positioning. */
-}
-
 
 .toast-base-style.error-style {
     background-color: var(--danger-color);
