@@ -153,6 +153,19 @@ class GameLogicService extends EventTarget {
             this.validationStates[index] = 'incorrect';
             showToast("Try again! Check the hint and your sentence.", 2000, 'error');
             this.dispatchGameState();
+
+            // If the input was from speech, restart recognition for the same field
+            // so the user can try again without clicking the mic button.
+            // This is crucial for platforms where recognition stops automatically after a result.
+            if (inputMethod === 'speech') {
+                const currentInput = document.getElementById(`sentence-input-${index}`) as HTMLTextAreaElement;
+                if (currentInput) {
+                    // Use a small timeout to allow the UI to update and prevent immediate re-triggering issues.
+                    setTimeout(() => {
+                        speechService.startRecognition(currentInput);
+                    }, 100); // A short delay can improve stability on some browsers.
+                }
+            }
         }
     }
 

@@ -12,6 +12,10 @@ export default defineConfig(({ mode }) => {
         alias: {
           '@': path.resolve(__dirname, '.'),
         }
+      },
+      server: {
+        host: true, // This makes the server accessible on the local network
+        port: 5173 // You can specify a port if you want
       }
     };
 });
