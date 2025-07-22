@@ -1,6 +1,6 @@
 // utils/constants.ts
 
-export const MODEL_NAME = "gemini-2.5-flash-lite-preview-06-17";
+export const MODEL_NAME = "gemini-2.5-flash-lite";
 export const DEFAULT_SENTENCE_COUNT = 10;
 export const DEFAULT_DIFFICULTY = 1; // "⚡"
 export const APP_SETTINGS_KEY = 'englishLearnerSettings_v3';
