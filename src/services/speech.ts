@@ -38,9 +38,12 @@ class SpeechService extends EventTarget {
         const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
         if (SpeechRecognition) {
             this.recognition = new SpeechRecognition();
-            this.recognition.continuous = true;
+            // Визначаємо, чи працюємо на Android
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            // Для Android використовуємо інші налаштування для кращої сумісності
+            this.recognition.continuous = !isAndroid; // false для Android, true для інших платформ
             this.recognition.lang = 'en-US';
-            this.recognition.interimResults = true;
+            this.recognition.interimResults = true; // Завжди true для відображення проміжних результатів в реальному часі
             this.recognition.maxAlternatives = 1;
 
             this.recognition.onresult = this.handleSpeechResult.bind(this);
@@ -157,7 +160,10 @@ class SpeechService extends EventTarget {
             this.recognition.stop();
         }
         this._pendingStartTarget = null; // Cancel any pending start requests
-        this.removeInputTargetListeners();
+        // Не видаляємо слухачів тут, оскільки мікрофон має вимикатись лише в двох випадках:
+        // 1) мікрофон вимикається сам коли користувач натискає на поле вводу
+        // 2) користувач натискає на активну (анімовану) кнопку мікрофона щоб вимкнути його власноруч.
+        // this.removeInputTargetListeners(); // Закоментовано згідно з вимогами
     }
 
     private addInputTargetListeners() {
@@ -192,15 +198,27 @@ class SpeechService extends EventTarget {
         if (!this.currentSpeechInputTarget) return;
 
         let fullTranscript = '';
+        let isFinal = false;
+        
+        // Обробляємо всі результати, включаючи проміжні
         for (let i = event.resultIndex; i < event.results.length; ++i) {
             fullTranscript += event.results[i][0].transcript;
+            // Якщо хоча б один результат фінальний, вважаємо весь результат фінальним
+            if (event.results[i].isFinal) {
+                isFinal = true;
+            }
         }
 
         const trimmedTranscript = fullTranscript.trim();
-        this.currentSpeechInputTarget.value = trimmedTranscript;
+        // Завжди оновлюємо значення поля вводу для відображення проміжних результатів в реальному часі
+        // Але лише якщо значення змінилося, щоб уникнути зайвих оновлень
+        if (this.currentSpeechInputTarget.value !== trimmedTranscript) {
+            this.currentSpeechInputTarget.value = trimmedTranscript;
+        }
 
+        // Відправляємо подію з результатом
         (this as EventTarget).dispatchEvent(new CustomEvent('speechResult', {
-            detail: { transcript: trimmedTranscript, isFinal: event.results[event.results.length - 1].isFinal }
+            detail: { transcript: trimmedTranscript, isFinal: isFinal }
         }));
     }
 
@@ -228,13 +246,27 @@ class SpeechService extends EventTarget {
 
     private handleSpeechEnd() {
         this._isRecognizingSpeech = false;
-        this.removeInputTargetListeners(); // Clean up listeners when recognition stops
-
-        // If there's a pending start request, fulfill it now that recognition has truly ended.
+        // Не видаляємо слухачів тут, оскільки мікрофон має вимикатись лише в двох випадках:
+        // 1) мікрофон вимикається сам коли користувач натискає на поле вводу
+        // 2) користувач натискає на активну (анімовану) кнопку мікрофона щоб вимкнути його власноруч.
+        
+        // Для Android додаємо невелику затримку перед перезапуском, щоб уникнути проблем з раннім завершенням
         if (this._pendingStartTarget) {
             const target = this._pendingStartTarget;
             this._pendingStartTarget = null; // Clear the pending request
-            this._startRecognitionInternal(target); // Start the new recognition
+            
+            // Визначаємо, чи працюємо на Android
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            
+            if (isAndroid) {
+                // Для Android додаємо невелику затримку перед перезапуском
+                setTimeout(() => {
+                    this._startRecognitionInternal(target);
+                }, 300); // 300ms затримка для Android
+            } else {
+                // Для інших платформ запускаємо одразу
+                this._startRecognitionInternal(target);
+            }
         }
         (this as EventTarget).dispatchEvent(new CustomEvent('speechEnd'));
     }
