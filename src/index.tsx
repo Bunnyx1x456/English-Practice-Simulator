@@ -150,7 +150,11 @@ function initializeListeners() {
         customSituationInput, addCustomSituationButton, customSituationsListElement, predefinedSituationsListElement, customSituationsHeader, situationAllCheckbox,
         customFocusInput, addCustomFocusButton, customFocusesListElement, predefinedFocusesListElement, customFocusesHeader, focusAllCheckbox,
         backButton: backButtonSettings, saveButton: saveButtonSettings,
-        collapsibleToggles: settingsCollapsibleToggles
+        collapsibleToggles: settingsCollapsibleToggles,
+        // Assistant elements
+        assistantEnabled: document.getElementById('assistant-enabled') as HTMLInputElement,
+        assistantModel: document.getElementById('assistant-model') as HTMLSelectElement,
+        assistantLanguage: document.getElementById('assistant-language') as HTMLSelectElement
     }, settingsService.settings, speechService.currentVoices)); // Передаємо поточні налаштування та голоси
 
     helpButton.addEventListener('click', () => openWelcomeModalComponent(welcomeModalElement, apiKeyInputWelcome, geminiAIService.currentApiKey));
@@ -193,7 +197,11 @@ function initializeListeners() {
             customSituationInput, addCustomSituationButton, customSituationsListElement, predefinedSituationsListElement, customSituationsHeader, situationAllCheckbox,
             customFocusInput, addCustomFocusButton, customFocusesListElement, predefinedFocusesListElement, customFocusesHeader, focusAllCheckbox,
             backButton: backButtonSettings, saveButton: saveButtonSettings,
-            collapsibleToggles: settingsCollapsibleToggles
+            collapsibleToggles: settingsCollapsibleToggles,
+            // Assistant elements
+            assistantEnabled: document.getElementById('assistant-enabled') as HTMLInputElement,
+            assistantModel: document.getElementById('assistant-model') as HTMLSelectElement,
+            assistantLanguage: document.getElementById('assistant-language') as HTMLSelectElement
         },
         (newSettings) => {
             settingsService.saveSettings(newSettings);
@@ -206,7 +214,11 @@ function initializeListeners() {
                 customSituationInput, addCustomSituationButton, customSituationsListElement, predefinedSituationsListElement, customSituationsHeader, situationAllCheckbox,
                 customFocusInput, addCustomFocusButton, customFocusesListElement, predefinedFocusesListElement, customFocusesHeader, focusAllCheckbox,
                 backButton: backButtonSettings, saveButton: saveButtonSettings,
-                collapsibleToggles: settingsCollapsibleToggles
+                collapsibleToggles: settingsCollapsibleToggles,
+                // Assistant elements
+                assistantEnabled: document.getElementById('assistant-enabled') as HTMLInputElement,
+                assistantModel: document.getElementById('assistant-model') as HTMLSelectElement,
+                assistantLanguage: document.getElementById('assistant-language') as HTMLSelectElement
             });
         },
         () => closeSettingsModalComponent({
@@ -218,7 +230,11 @@ function initializeListeners() {
             customSituationInput, addCustomSituationButton, customSituationsListElement, predefinedSituationsListElement, customSituationsHeader, situationAllCheckbox,
             customFocusInput, addCustomFocusButton, customFocusesListElement, predefinedFocusesListElement, customFocusesHeader, focusAllCheckbox,
             backButton: backButtonSettings, saveButton: saveButtonSettings,
-            collapsibleToggles: settingsCollapsibleToggles
+            collapsibleToggles: settingsCollapsibleToggles,
+            // Assistant elements
+            assistantEnabled: document.getElementById('assistant-enabled') as HTMLInputElement,
+            assistantModel: document.getElementById('assistant-model') as HTMLSelectElement,
+            assistantLanguage: document.getElementById('assistant-language') as HTMLSelectElement
         })
     );
 }
