@@ -1,6 +1,6 @@
 // components/modals/settings-modal.ts
 
-import { Settings } from '../../types';
+import { Settings, AssistantSettings } from '../../types';
 import { setupCollapsibleSections } from '../../utils/dom-helpers';
 import { getDifficultyEmoji } from '../../utils/string-helpers';
 import { DEBOUNCE_DELAY } from '../../utils/constants';
@@ -39,6 +39,10 @@ interface SettingsModalElements {
     backButton: HTMLButtonElement;
     saveButton: HTMLButtonElement;
     collapsibleToggles: NodeListOf<HTMLButtonElement>;
+    // Assistant elements
+    assistantEnabled: HTMLInputElement;
+    assistantModel: HTMLSelectElement;
+    assistantLanguage: HTMLSelectElement;
 }
 
 // Function to update the TTS voice dropdown
@@ -106,6 +110,12 @@ export function setupSettingsModal(
             ],
             customSituations: [...settingsService.settings.customSituations],
             customFocuses: [...settingsService.settings.customFocuses],
+            // Assistant settings
+            assistant: {
+                enabled: elements.assistantEnabled.checked,
+                model: elements.assistantModel.value,
+                language: elements.assistantLanguage.value
+            }
         };
         onSaveSettings(newSettings);
     });
@@ -192,6 +202,17 @@ export function openSettingsModal(elements: SettingsModalElements, settings: Set
         elements.apiKeyInput.classList.remove('incorrect');
     } else {
         elements.apiKeyInput.classList.remove('correct', 'incorrect');
+    }
+
+    // Assistant settings
+    if (settings.assistant) {
+        elements.assistantEnabled.checked = settings.assistant.enabled || false;
+        elements.assistantModel.value = settings.assistant.model || 'gemini-2.5-flash-lite';
+        elements.assistantLanguage.value = settings.assistant.language || 'en';
+    } else {
+        elements.assistantEnabled.checked = false;
+        elements.assistantModel.value = 'gemini-2.5-flash-lite';
+        elements.assistantLanguage.value = 'en';
     }
 
     elements.customSituationsListElement.innerHTML = '';

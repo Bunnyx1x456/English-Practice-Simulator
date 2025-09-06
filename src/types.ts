@@ -10,6 +10,12 @@ export type ValidationStatus = 'pending' | 'correct' | 'incorrect';
 export type InputMethod = 'keyboard' | 'speech';
 export type ToastType = 'error' | 'success';
 
+export interface AssistantSettings {
+    enabled: boolean;
+    model: string;
+    language: string;
+}
+
 export interface Settings {
     appearanceMode: 'system' | 'light' | 'dark';
     scaling: number;
@@ -21,6 +27,7 @@ export interface Settings {
     customSituations: string[];
     selectedFocuses: string[];
     customFocuses: string[];
+    assistant?: AssistantSettings; // Optional assistant settings
 }
 
 export interface DifficultyPromptDetails {
