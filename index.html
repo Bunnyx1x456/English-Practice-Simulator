@@ -394,6 +394,123 @@
                 </div>
             </div>
 
+            <!-- Assistant Settings Section -->
+            <div class="settings-section">
+                <button type="button" class="settings-section-toggle" id="assistant-toggle" aria-expanded="true" aria-controls="assistant-content">
+                    <h3 class="settings-subheader">Assistant</h3>
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+                    </svg>
+                </button>
+                <div id="assistant-content" class="settings-section-content">
+                    <!-- Enable/Disable Switch -->
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <label for="assistant-enabled">Enable/Disable Assistant</label>
+                        </div>
+                        <div class="setting-control">
+                            <!-- Rounded switch -->
+                            <label class="switch">
+                                <input type="checkbox" id="assistant-enabled">
+                                <span class="slider round"></span>
+                            </label>
+                            <span class="switch-label" id="assistant-status-label">Disabled</span>
+                        </div>
+                    </div>
+
+                    <!-- Assistant Model Selection -->
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <label for="assistant-model">Assistant AI Model</label>
+                        </div>
+                        <div class="setting-control">
+                            <select id="assistant-model" class="model-select" disabled>
+                                <!-- Favorite Models Section -->
+                                <optgroup label="🌟 Favorite Models">
+                                    <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite</option>
+                                </optgroup>
+                                
+                                <!-- Fastest Models Section -->
+                                <optgroup label="⚡ Fastest (Flash Family)">
+                                    <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite (Release: July 2025) 🌟 DEFAULT</option>
+                                    <option value="gemini-2.5-flash">gemini-2.5-flash (Release: June 2025)</option>
+                                    <option value="gemini-1.5-flash-latest">gemini-1.5-flash-latest (Points to latest release after April 2024)</option>
+                                    <option value="gemini-1.5-flash-002">gemini-1.5-flash-002 (Release: September 2024)</option>
+                                    <option value="gemini-1.5-flash-8b-latest">gemini-1.5-flash-8b-latest (Release: October 2024)</option>
+                                </optgroup>
+                                
+                                <!-- Most Powerful Models Section -->
+                                <optgroup label="💪 Most Powerful (Pro Family)">
+                                    <option value="gemini-2.5-pro">gemini-2.5-pro (Release: June 2025)</option>
+                                    <option value="gemini-2.5-pro-preview-06-05">gemini-2.5-pro-preview-06-05 (Release: June 2025)</option>
+                                    <option value="gemini-2.5-pro-preview-05-06">gemini-2.5-pro-preview-05-06 (Release: May 2025)</option>
+                                    <option value="gemini-1.5-pro-latest">gemini-1.5-pro-latest (Points to latest release after April 2024)</option>
+                                    <option value="gemini-1.5-pro-002">gemini-1.5-pro-002 (Release: September 2024)</option>
+                                    <option value="gemini-1.5-pro">gemini-1.5-pro (Release: May 2024)</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Assistant Language Selection -->
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <label for="assistant-language">Assistant Language</label>
+                        </div>
+                        <div class="setting-control">
+                            <select id="assistant-language" disabled>
+                                <option value="English">English</option>
+                                <option value="Spanish">Spanish</option>
+                                <option value="French">French</option>
+                                <option value="German">German</option>
+                                <option value="Italian">Italian</option>
+                                <option value="Portuguese">Portuguese</option>
+                                <option value="Russian">Russian</option>
+                                <option value="Chinese">Chinese</option>
+                                <option value="Japanese">Japanese</option>
+                                <option value="Korean">Korean</option>
+                                <option value="Arabic">Arabic</option>
+                                <option value="Hindi">Hindi</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generation Model Selection (in Generation section) -->
+            <div class="setting-item">
+                <div class="setting-label">
+                    <label for="generation-model">Generation AI Model</label>
+                </div>
+                <div class="setting-control">
+                    <select id="generation-model" class="model-select">
+                        <!-- Favorite Models Section -->
+                        <optgroup label="🌟 Favorite Models">
+                            <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite</option>
+                        </optgroup>
+                        
+                        <!-- Fastest Models Section -->
+                        <optgroup label="⚡ Fastest (Flash Family)">
+                            <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite (Release: July 2025) 🌟 DEFAULT</option>
+                            <option value="gemini-2.5-flash">gemini-2.5-flash (Release: June 2025)</option>
+                            <option value="gemini-1.5-flash-latest">gemini-1.5-flash-latest (Points to latest release after April 2024)</option>
+                            <option value="gemini-1.5-flash-002">gemini-1.5-flash-002 (Release: September 2024)</option>
+                            <option value="gemini-1.5-flash-8b-latest">gemini-1.5-flash-8b-latest (Release: October 2024)</option>
+                        </optgroup>
+                        
+                        <!-- Most Powerful Models Section -->
+                        <optgroup label="💪 Most Powerful (Pro Family)">
+                            <option value="gemini-2.5-pro">gemini-2.5-pro (Release: June 2025)</option>
+                            <option value="gemini-2.5-pro-preview-06-05">gemini-2.5-pro-preview-06-05 (Release: June 2025)</option>
+                            <option value="gemini-2.5-pro-preview-05-06">gemini-2.5-pro-preview-05-06 (Release: May 2025)</option>
+                            <option value="gemini-1.5-pro-latest">gemini-1.5-pro-latest (Points to latest release after April 2024)</option>
+                            <option value="gemini-1.5-pro-002">gemini-1.5-pro-002 (Release: September 2024)</option>
+                            <option value="gemini-1.5-pro">gemini-1.5-pro (Release: May 2024)</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+
             <div class="modal-footer">
                 <button id="back-button-settings" class="text-button">Back</button>
                 <button id="save-button-settings" class="text-button primary">Save</button>

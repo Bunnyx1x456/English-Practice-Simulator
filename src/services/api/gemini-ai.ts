@@ -75,6 +75,8 @@ class GeminiAIService {
             throw new Error("AI client not initialized. Please provide a valid API Key.");
         }
 
+        const modelName = settings.generationModel || MODEL_NAME;
+
         const difficultyDetails: DifficultyPromptDetails = getDifficultyDetails(settings.difficulty);
 
         const situationsPrompt = settings.selectedSituations.join(', ') || "any common situation";
@@ -108,7 +110,7 @@ class GeminiAIService {
 
         try {
             const result = await this.ai.models.generateContent({
-                model: MODEL_NAME,
+                model: modelName,
                 contents: [{ role: 'user', parts: [{ text: prompt }] }], // Використовуємо об'єкт contents замість прямого передавання
                 config: { responseMimeType: "application/json" }
             });

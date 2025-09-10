@@ -4,6 +4,7 @@ import { geminiAIService } from './services/api/gemini-ai.ts';
 import { settingsService } from './services/settings.ts';
 import { speechService } from './services/speech.ts';
 import { gameLogicService } from './services/game-logic.ts';
+import { assistantService } from './services/assistant.ts';
 import { getWelcomeShown } from './utils/storage.ts';
 
 import {
@@ -27,6 +28,8 @@ import {
     openSettingsModal as openSettingsModalComponent,
     closeSettingsModal as closeSettingsModalComponent
 } from './components/modals/settings-modal.ts';
+
+import { assistantUI } from './components/assistant-ui.ts';
 
 
 // --- DOM Elements (Centralized Querying) ---
@@ -65,6 +68,12 @@ let customFocusesHeader: HTMLElement;
 let focusAllCheckbox: HTMLInputElement;
 let settingsCollapsibleToggles: NodeListOf<HTMLButtonElement>;
 
+// Assistant elements
+let assistantEnabled: HTMLInputElement;
+let assistantModel: HTMLSelectElement;
+let assistantLanguage: HTMLSelectElement;
+let assistantStatusLabel: HTMLElement;
+let generationModel: HTMLSelectElement;
 
 let welcomeModalElement: HTMLElement;
 let closeWelcomeModalButton: HTMLButtonElement;
@@ -127,6 +136,12 @@ function queryDOMElements() {
     focusAllCheckbox = document.getElementById('focus-all') as HTMLInputElement;
     settingsCollapsibleToggles = document.querySelectorAll<HTMLButtonElement>('.settings-section-toggle');
 
+    // Assistant elements
+    assistantEnabled = document.getElementById('assistant-enabled') as HTMLInputElement;
+    assistantModel = document.getElementById('assistant-model') as HTMLSelectElement;
+    assistantLanguage = document.getElementById('assistant-language') as HTMLSelectElement;
+    assistantStatusLabel = document.getElementById('assistant-status-label')!;
+    generationModel = document.getElementById('generation-model') as HTMLSelectElement;
 
     // Welcome Modal elements
     welcomeModalElement = document.getElementById('welcome-modal')!;
@@ -193,7 +208,9 @@ function initializeListeners() {
             customSituationInput, addCustomSituationButton, customSituationsListElement, predefinedSituationsListElement, customSituationsHeader, situationAllCheckbox,
             customFocusInput, addCustomFocusButton, customFocusesListElement, predefinedFocusesListElement, customFocusesHeader, focusAllCheckbox,
             backButton: backButtonSettings, saveButton: saveButtonSettings,
-            collapsibleToggles: settingsCollapsibleToggles
+            collapsibleToggles: settingsCollapsibleToggles,
+            assistantEnabled, assistantModel, assistantLanguage, assistantStatusLabel,
+            generationModel
         },
         (newSettings) => {
             settingsService.saveSettings(newSettings);
@@ -206,7 +223,9 @@ function initializeListeners() {
                 customSituationInput, addCustomSituationButton, customSituationsListElement, predefinedSituationsListElement, customSituationsHeader, situationAllCheckbox,
                 customFocusInput, addCustomFocusButton, customFocusesListElement, predefinedFocusesListElement, customFocusesHeader, focusAllCheckbox,
                 backButton: backButtonSettings, saveButton: saveButtonSettings,
-                collapsibleToggles: settingsCollapsibleToggles
+                collapsibleToggles: settingsCollapsibleToggles,
+                assistantEnabled, assistantModel, assistantLanguage, assistantStatusLabel,
+                generationModel
             });
         },
         () => closeSettingsModalComponent({
@@ -218,7 +237,9 @@ function initializeListeners() {
             customSituationInput, addCustomSituationButton, customSituationsListElement, predefinedSituationsListElement, customSituationsHeader, situationAllCheckbox,
             customFocusInput, addCustomFocusButton, customFocusesListElement, predefinedFocusesListElement, customFocusesHeader, focusAllCheckbox,
             backButton: backButtonSettings, saveButton: saveButtonSettings,
-            collapsibleToggles: settingsCollapsibleToggles
+            collapsibleToggles: settingsCollapsibleToggles,
+            assistantEnabled, assistantModel, assistantLanguage, assistantStatusLabel,
+            generationModel
         })
     );
 }

@@ -3,6 +3,7 @@
 import { SentencePair, ValidationStatus, InputMethod, Settings } from '../types';
 import { geminiAIService } from './api/gemini-ai';
 import { speechService } from './speech';
+import { assistantService } from './assistant';
 import { showLoading, showToast } from '../utils/dom-helpers';
 import { normalizeSentenceForComparison } from '../utils/string-helpers';
 import { highlightNewGameButton, triggerConfettiEffect } from '../utils/effects';
@@ -154,6 +155,9 @@ class GameLogicService extends EventTarget {
             showToast("Try again! Check the hint and your sentence.", 2000, 'error');
             this.dispatchGameState();
 
+            // Викликаємо асистента для підказки
+            this.showAssistantHint(index, userInput);
+
             // If the input was from speech, restart recognition for the same field
             // so the user can try again without clicking the mic button.
             // This is crucial for platforms where recognition stops automatically after a result.
@@ -221,6 +225,22 @@ class GameLogicService extends EventTarget {
                 isRecognizingSpeech: speechService.IsRecognizing
             }
         }));
+    }
+
+    private async showAssistantHint(index: number, userInput: string) {
+        // Імпортуємо assistantUI прямо тут, щоб уникнути циклічних залежностей
+        const { assistantUI } = await import('../components/assistant-ui');
+        
+        if (this.currentSettings?.assistantEnabled && 
+            assistantService.isInitialized && 
+            index < this.sentences.length) {
+            
+            try {
+                assistantUI.showHint(userInput, this.sentences[index].sentence);
+            } catch (error) {
+                console.error('Failed to show assistant hint:', error);
+            }
+        }
     }
 
     private updateLoadingState() {

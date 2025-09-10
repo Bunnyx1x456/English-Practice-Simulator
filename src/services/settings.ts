@@ -60,6 +60,10 @@ class SettingsService {
             selectedFocuses: ["Common Vocabulary"],
             customSituations: [],
             customFocuses: [],
+            assistantEnabled: false,
+            assistantModel: 'gemini-2.5-flash-lite',
+            assistantLanguage: 'English',
+            generationModel: 'gemini-2.5-flash-lite',
         };
         if (loaded) {
             loaded = {

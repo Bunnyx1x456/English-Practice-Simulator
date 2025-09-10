@@ -891,3 +891,183 @@ textarea:disabled {
 .new-game-button-pulse-animation {
     animation: newGamePulseAnimation 0.35s ease-in-out;
 }
+
+/* Switch Styles */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Switch label */
+.switch-label {
+    margin-left: 10px;
+    font-weight: 500;
+}
+
+/* Model select styles */
+.model-select {
+    min-width: 200px;
+}
+
+/* Assistant hint styles */
+.assistant-hint-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 350px;
+    max-height: 200px;
+    background: var(--assistant-bg, #fff3cd);
+    border: 1px solid var(--assistant-border, #ffeaa7);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 10000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.assistant-hint-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.assistant-hint-container.mobile {
+    position: fixed;
+    top: auto;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    width: auto;
+    max-height: 150px;
+}
+
+.assistant-hint-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--assistant-header-bg, #fff3cd);
+    border-bottom: 1px solid var(--assistant-border, #ffeaa7);
+}
+
+.assistant-hint-title {
+    font-weight: 600;
+    color: var(--assistant-text, #856404);
+    font-size: 14px;
+}
+
+.assistant-hint-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--assistant-text, #856404);
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.assistant-hint-close:hover {
+    background-color: var(--assistant-close-hover, rgba(133, 100, 4, 0.1));
+}
+
+.assistant-hint-content {
+    padding: 16px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--assistant-text, #856404);
+    overflow-y: auto;
+    max-height: 140px;
+}
+
+.assistant-loading {
+    text-align: center;
+    color: var(--assistant-text, #856404);
+    font-style: italic;
+}
+
+.assistant-error {
+    color: var(--error-color, #dc3545);
+    font-weight: 500;
+}
+
+/* Темна тема для асистента */
+body.dark-mode .assistant-hint-container {
+    --assistant-bg: #343a40;
+    --assistant-border: #495057;
+    --assistant-header-bg: #495057;
+    --assistant-text: #f8f9fa;
+    --assistant-close-hover: rgba(248, 249, 250, 0.1);
+}
+
+body.dark-mode .assistant-error {
+    --error-color: #ff6b6b;
+}
+
+/* Адаптивність для клавіатури на мобільних */
+@media (max-height: 600px) and (pointer: coarse) {
+    .assistant-hint-container.mobile {
+        bottom: 250px; /* Вище клавіатури */
+    }
+}

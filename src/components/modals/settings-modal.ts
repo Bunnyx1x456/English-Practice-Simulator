@@ -3,7 +3,7 @@
 import { Settings } from '../../types';
 import { setupCollapsibleSections } from '../../utils/dom-helpers';
 import { getDifficultyEmoji } from '../../utils/string-helpers';
-import { DEBOUNCE_DELAY } from '../../utils/constants';
+import { DEBOUNCE_DELAY, MODEL_NAME } from '../../utils/constants';
 import { debounce } from '../../utils/debounce';
 
 import { settingsService } from '../../services/settings';
@@ -39,6 +39,13 @@ interface SettingsModalElements {
     backButton: HTMLButtonElement;
     saveButton: HTMLButtonElement;
     collapsibleToggles: NodeListOf<HTMLButtonElement>;
+    // Assistant elements
+    assistantEnabled: HTMLInputElement;
+    assistantModel: HTMLSelectElement;
+    assistantLanguage: HTMLSelectElement;
+    assistantStatusLabel: HTMLElement;
+    // Generation model
+    generationModel: HTMLSelectElement;
 }
 
 // Function to update the TTS voice dropdown
@@ -106,6 +113,10 @@ export function setupSettingsModal(
             ],
             customSituations: [...settingsService.settings.customSituations],
             customFocuses: [...settingsService.settings.customFocuses],
+            assistantEnabled: elements.assistantEnabled?.checked || false,
+            assistantModel: elements.assistantModel?.value || 'gemini-2.5-flash-lite',
+            assistantLanguage: elements.assistantLanguage?.value || 'English',
+            generationModel: elements.generationModel?.value || 'gemini-2.5-flash-lite',
         };
         onSaveSettings(newSettings);
     });
@@ -158,6 +169,18 @@ export function setupSettingsModal(
     });
 
     setupCollapsibleSections(elements.collapsibleToggles);
+
+    // Assistant enable/disable functionality
+    if (elements.assistantEnabled) {
+        elements.assistantEnabled.addEventListener('change', () => {
+            const isEnabled = elements.assistantEnabled.checked;
+            if (elements.assistantModel) elements.assistantModel.disabled = !isEnabled;
+            if (elements.assistantLanguage) elements.assistantLanguage.disabled = !isEnabled;
+            if (elements.assistantStatusLabel) {
+                elements.assistantStatusLabel.textContent = isEnabled ? 'Enabled' : 'Disabled';
+            }
+        });
+    }
 
     // Listen for TTS voices to change and update the dropdown
     speechService.addEventListener('ttsVoicesChanged', ((e: CustomEvent) => {
@@ -215,6 +238,25 @@ export function openSettingsModal(elements: SettingsModalElements, settings: Set
     if (elements.customSituationsListElement.children.length > 0) elements.customSituationsHeader.style.display = 'block';
     if (elements.customFocusesListElement.children.length > 0) elements.customFocusesHeader.style.display = 'block';
 
+    // Assistant settings
+    if (elements.assistantEnabled) {
+        elements.assistantEnabled.checked = settings.assistantEnabled || false;
+        elements.assistantEnabled.dispatchEvent(new Event('change'));
+    }
+    if (elements.assistantModel) {
+        elements.assistantModel.value = settings.assistantModel || 'gemini-2.5-flash-lite';
+    }
+    if (elements.assistantLanguage) {
+        elements.assistantLanguage.value = settings.assistantLanguage || 'English';
+    }
+    if (elements.assistantStatusLabel) {
+        elements.assistantStatusLabel.textContent = settings.assistantEnabled ? 'Enabled' : 'Disabled';
+    }
+    
+    // Generation model
+    if (elements.generationModel) {
+        elements.generationModel.value = settings.generationModel || 'gemini-2.5-flash-lite';
+    }
 
     elements.modal.style.display = 'flex';
 }

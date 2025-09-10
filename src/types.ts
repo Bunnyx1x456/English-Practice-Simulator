@@ -21,6 +21,11 @@ export interface Settings {
     customSituations: string[];
     selectedFocuses: string[];
     customFocuses: string[];
+    // Assistant settings
+    assistantEnabled: boolean;
+    assistantModel: string;
+    assistantLanguage: string;
+    generationModel: string;
 }
 
 export interface DifficultyPromptDetails {
