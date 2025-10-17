@@ -39,7 +39,7 @@ export const ASSISTANT_LANGUAGES = [
     { value: "German", label: "German" },
     { value: "Italian", label: "Italian" },
     { value: "Portuguese", label: "Portuguese" },
-    { value: "Russian", label: "Russian" },
+    { value: "Ukrainian", label: "Ukrainian" },
     { value: "Chinese", label: "Chinese" },
     { value: "Japanese", label: "Japanese" },
     { value: "Korean", label: "Korean" },
